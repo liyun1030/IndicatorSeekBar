@@ -444,14 +444,21 @@ public class IndicatorSeekBar extends View implements ViewTreeObserver.OnGlobalL
     }
 
     private void drawThumb(Canvas canvas, float thumbX) {
+
+        if (mThumbDraw == null) {
+            mThumbDraw = getBitmapDraw(p.mThumbDrawable, true);
+        }
         mStockPaint.setColor(p.mThumbColor);
-        if (p.mThumbDrawable != null) {
-            if (mThumbDraw == null) {
-                mThumbDraw = getBitmapDraw(p.mThumbDrawable, true);
+
+        //需求是第一个不画
+        for (int i = 1; i < getThumbPosOnTick()+1; i++) {
+
+            float locationX = mTextLocationList.get(i);
+            if (p.mThumbDrawable != null) {
+                canvas.drawBitmap(mThumbDraw, locationX - mThumbDraw.getWidth() / 2.0f, mTrackY - mThumbDraw.getHeight() / 2.0f, mStockPaint);
+            } else {
+                canvas.drawCircle(locationX + p.mBackgroundTrackSize / 2.0f, mTrackY, mIsTouching ? mThumbTouchRadius : mThumbRadius, mStockPaint);
             }
-            canvas.drawBitmap(mThumbDraw, thumbX - mThumbDraw.getWidth() / 2.0f, mTrackY - mThumbDraw.getHeight() / 2.0f, mStockPaint);
-        } else {
-            canvas.drawCircle(thumbX + p.mBackgroundTrackSize / 2.0f, mTrackY, mIsTouching ? mThumbTouchRadius : mThumbRadius, mStockPaint);
         }
     }
 
@@ -491,7 +498,7 @@ public class IndicatorSeekBar extends View implements ViewTreeObserver.OnGlobalL
         mStockPaint.setColor(p.mTickColor);
         for (int i = 0; i < mTextLocationList.size(); i++) {
             float locationX = mTextLocationList.get(i);
-            if (getThumbPosOnTick() == i) {
+            if (getThumbPosOnTick() >= i) {
                 continue;
             }
             if (p.mTickOnThumbLeftHide) {
