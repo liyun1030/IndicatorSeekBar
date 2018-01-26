@@ -451,7 +451,7 @@ public class IndicatorSeekBar extends View implements ViewTreeObserver.OnGlobalL
         mStockPaint.setColor(p.mThumbColor);
 
         //需求是第一个不画
-        for (int i = 1; i < getThumbPosOnTick()+1; i++) {
+        for (int i = 1; i < getThumbPosOnTick() + 1 && i < mTextLocationList.size(); i++) {
 
             float locationX = mTextLocationList.get(i);
             if (p.mThumbDrawable != null) {
@@ -640,7 +640,7 @@ public class IndicatorSeekBar extends View implements ViewTreeObserver.OnGlobalL
             initEndTexts();
             return;
         }
-        if (p.mTickNum > 1) {
+        if (p.mTickNum > 0) {
             mTextLocationList.clear();
             mTextList.clear();
             for (int i = 0; i < p.mTickNum + 1; i++) {
